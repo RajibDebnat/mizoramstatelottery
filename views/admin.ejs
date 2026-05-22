@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Upload - Lottery</title>
+    <link rel="stylesheet" href="/css/admin.css">
+</head>
+<body>
+    <div class="upload-container">
+        <!-- Header Section -->
+        <div class="upload-header">
+            <div class="header-content">
+                <h1 class="header-title">Upload Lottery Results</h1>
+                <p class="header-subtitle">Add winning numbers and results for the lottery draw</p>
+            </div>
+            <div class="header-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                    <path d="M12 2v20M2 12h20" />
+                    <path d="M8 8h8v8H8z" />
+                </svg>
+            </div>
+        </div>
+
+        <!-- Main Form Card -->
+        <div class="form-card">
+            <form id="uploadForm" action="/upload" method="POST" enctype="multipart/form-data">
+
+                <!-- Time Slot Selection -->
+                <div class="form-section">
+                    <div class="section-header">
+                        <h2 class="section-title">Select Time Slot</h2>
+                        <p class="section-info">Choose when this draw occurs</p>
+                    </div>
+
+                    <div class="slot-grid">
+                        <label class="slot-option">
+                            <input type="radio" name="slot" value="afternoon" required>
+                            <div class="slot-box">
+                                <div class="slot-icon">🌤️</div>
+                                <div class="slot-text">
+                                    <span class="slot-label">Afternoon Draw</span>
+                                    <span class="slot-time">2:00 PM</span>
+                                </div>
+                            </div>
+                        </label>
+
+                        <label class="slot-option">
+                            <input type="radio" name="slot" value="night" required>
+                            <div class="slot-box">
+                                <div class="slot-icon">🌙</div>
+                                <div class="slot-text">
+                                    <span class="slot-label">Night Draw</span>
+                                    <span class="slot-time">9:00 PM</span>
+                                </div>
+                            </div>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Image Upload Section -->
+                <div class="form-section">
+                    <div class="section-header">
+                        <h2 class="section-title">Upload Image</h2>
+                        <p class="section-info">Upload a high-quality image of the results</p>
+                    </div>
+
+                    <!-- Drop Zone -->
+                    <div class="drop-zone" id="dropZone">
+                        <input type="file" name="image" id="fileInput" accept="image/*" required>
+
+                        <!-- Idle State -->
+                        <div id="idleState" class="zone-idle">
+                            <svg class="upload-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="1.5">
+                                <path d="M7 18c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z" />
+                                <path
+                                    d="M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2z" />
+                                <path d="M21 12l-5-5-6 6-4-4" />
+                            </svg>
+                            <div class="idle-text">
+                                <p class="drop-title">Drop your image here</p>
+                                <p class="drop-subtitle">or <span class="browse-link">browse from your computer</span>
+                                </p>
+                            </div>
+                            <p class="file-hint">Supported formats: JPG, PNG, WEBP • Max size: 10 MB</p>
+                        </div>
+
+                        <!-- Preview State -->
+                        <div id="previewBox" class="zone-preview">
+                            <div class="preview-content">
+                                <img id="previewImg" src="" alt="preview" class="preview-image">
+                                <div class="preview-details">
+                                    <p class="preview-name" id="previewName"></p>
+                                    <p class="preview-size" id="previewSize"></p>
+                                </div>
+                            </div>
+                            <button type="button" id="removeBtn" class="remove-btn">
+                                <svg viewBox="0 0 24 24" fill="currentColor">
+                                    <path
+                                        d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41z" />
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="upload-note">
+                        <svg viewBox="0 0 24 24" fill="currentColor">
+                            <path
+                                d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z" />
+                        </svg>
+                        <span>Ensure the image is clear and legible for users to verify results</span>
+                    </div>
+                </div>
+
+                <!-- Form Actions -->
+                <div class="form-actions">
+                    <button type="reset" class="btn btn-secondary" id="clearBtn">
+                        <svg viewBox="0 0 24 24" fill="currentColor">
+                            <path
+                                d="M12 5V1m0 22v-4M4.22 4.22l-2.83-2.83m20 20l-2.83-2.83m-17.17 0l2.83-2.83m17.17 0l2.83-2.83" />
+                        </svg>
+                        Clear
+                    </button>
+                    <button type="submit" class="btn btn-primary">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M12 19V5M5 12l7-7 7 7" />
+                        </svg>
+                        Upload Results
+                    </button>
+                </div>
+
+            </form>
+        </div>
+
+        <!-- Footer Info -->
+        <div class="upload-footer">
+            <p>Need help? Contact the administrator for assistance.</p>
+        </div>
+    </div>
+
+    <script src="/javascripts/admin.js"></script>
+</body>
+</html>

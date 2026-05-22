@@ -1,0 +1,140 @@
+require('dotenv').config();
+
+const express = require('express');
+const multer = require('multer');
+const cloudinary = require('cloudinary').v2;
+
+const app = express();
+
+// ✅ Cloudinary config
+cloudinary.config({
+  cloud_name: process.env.CLOUD_NAME,
+  api_key: process.env.API_KEY,
+  api_secret: process.env.API_SECRET
+});
+
+// ✅ Multer (memory storage + validation)
+const upload = multer({
+  storage: multer.memoryStorage(),
+
+  fileFilter: (req, file, cb) => {
+    if (file.mimetype.startsWith('image/')) {
+      cb(null, true);
+    } else {
+      cb(new Error('Only image files allowed ❌'), false);
+    }
+  },
+
+  limits: {
+    fileSize: 5 * 1024 * 1024 // 5MB
+  }
+});
+
+// ✅ Upload route
+app.post('/upload', upload.single('image'), async (req, res) => {
+  try {
+    const { type } = req.body;
+
+    // 🔥 Validate type
+    if (!type || !['2pm', '9pm'].includes(type)) {
+      return res.status(400).json({
+        error: 'Type must be 2pm or 9pm'
+      });
+    }
+
+    // 🔥 Validate file
+    if (!req.file) {
+      return res.status(400).json({
+        error: 'No image uploaded'
+      });
+    }
+
+    // ✅ Upload to Cloudinary
+    const result = await new Promise((resolve, reject) => {
+      cloudinary.uploader.upload_stream(
+        {
+          folder: 'lottery',
+          public_id: type,     // 👉 overwrite same image
+          overwrite: true
+        },
+        (error, result) => {
+          if (error) reject(error);
+          else resolve(result);
+        }
+      ).end(req.file.buffer);
+    });
+
+    // ✅ Send response
+    res.status(200).json({
+      message: 'Upload successful ✅',
+      data: {
+        url: result.secure_url,
+        public_id: result.public_id,
+        format: result.format,
+        width: result.width,
+        height: result.height,
+        created_at: result.created_at
+      }
+    });
+
+  } catch (err) {
+    console.error(err);
+
+    res.status(500).json({
+      error: 'Upload failed ❌',
+      details: err.message
+    });
+  }
+});
+
+// ✅ Error handler
+app.use((err, req, res, next) => {
+  res.status(400).json({
+    error: err.message
+  });
+});
+
+app.listen(3000, () => {
+  console.log('Server running on http://localhost:3000');
+});
+
+
+
+
+// debnathrajib506_db_user username
+// 7apy6EW0Kfa5ZcjZ password
+mongodb+srv://debnathrajib506_db_user:7apy6EW0Kfa5ZcjZ@cluster0.lbckhp0.mongodb.net/
+// lottery01
+// tNpqNaOpmZUkKF1H password
+mongodb+srv://<db_username>:<db_password>@cluster0.lbckhp0.mongodb.net/
+/ app.get('/create', async (req, res) => {
+
+//   let createdImage = await imageModel.create({
+//     type: '9pm',
+//     imageUrl: 'https://via.placeholder.com/300', // fake image for test
+//     publicId: 'test123'
+//   });
+
+//   res.send(createdImage);
+// });
+// app.get('/update', async (req, res) => {
+
+//   let updateImage = await imageModel.findOneAndUpdate(
+//     { type: '2pm' }, // filter
+//     {
+//       imageUrl: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSy1NiZ172nBp80sbhLu8LjwWdk905tF_RSHg&s"
+//     },
+//     { new: true } // 👉 return updated data
+//   );
+
+//   res.send(updateImage);
+// });
+// app.get('/read',async (req,res)=>{
+//   let images = await imageModel.find();
+//   res.send(images)
+// })
+// app.get('/delete',async (req,res)=>{
+//   let deletedImages = await imageModel.findOneAndDelete({type:'2pm'})
+//   res.send(deletedImages)
+// })
+// routes
